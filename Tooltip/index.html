@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web Components</title>
+    <script src="tooltip.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            --color-primary: lightpink;
+        }
+    </style>
+</head>
+<body>
+    <p><tlw-tooltip text="This is web component tooltip."><span class="highlight">Web Components</span></tlw-tooltip> are awesome!</p>
+    <tlw-tooltip class="important"></tlw-tooltip>
+    <div>This does not get web component styles!</div>
+</body>
+</html>
