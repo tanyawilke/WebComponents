@@ -48,8 +48,9 @@ class Modal extends HTMLElement {
                     padding: 1rem;
                 }
 
-                header h1 {
+                ::slotted(h1) {
                     font-size: 1.25rem;
+                    margin-bottom: 0;
                 }
 
                 #actions {
@@ -68,7 +69,7 @@ class Modal extends HTMLElement {
             <div id="backdrop"></div>
             <div id="modal">
                 <header>
-                    <h1>Please confirm</h1>
+                    <slot name="title"></slot>
                 </header>
                 <section id="main">
                     <slot></slot>
@@ -78,7 +79,11 @@ class Modal extends HTMLElement {
                     <button>Ok</button>
                 </section>
             </div>
-        `
+        `;
+        const slots = this.shadowRoot.querySelectorAll('slot');
+        slots[1].addEventListener('slotchange', event => {
+            console.dir(slots[1].assignedNodes())
+        });
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
