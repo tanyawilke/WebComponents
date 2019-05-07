@@ -28,10 +28,19 @@
         const confirmButton = document.querySelector('button');
         const modal = document.querySelector('tlw-modal');
 
+        modal.addEventListener('confirm', () => {
+            console.log('confirmed...');
+        });
+
+        modal.addEventListener('cancel', () => {
+            console.log('cancelled...');
+        });
+
         confirmButton.addEventListener('click', () => {
             // modal.setAttribute('opened', '');
             if (!modal.isOpen) {
                 modal.open();
+                console.log('opening...');
             }            
         });
     </script>

@@ -2,7 +2,7 @@ class Modal extends HTMLElement {
     constructor() {
         super();
 
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({ mode: 'open' });
         this.isOpen = false;
         this.shadowRoot.innerHTML = `
             <style>
@@ -24,10 +24,14 @@ class Modal extends HTMLElement {
                     pointer-events: all;
                 }
 
+                :host([opened]) #modal {
+                    top: 15vh;
+                }
+
                 #modal {
                     z-index: 100;
                     position: fixed;
-                    top: 15vh;
+                    top: 10vh;
                     left: 25%;
                     width: 50%;
                     background-color: #FFF;
@@ -37,7 +41,8 @@ class Modal extends HTMLElement {
                     flex-direction: column;
                     justify-content: space-between;
                     opacity: 0;
-                    pointer-events: none;
+                    pointer-events: none;    
+                    transition: all 0.3s ease-out;                
                 }
 
                 #main {
@@ -46,11 +51,12 @@ class Modal extends HTMLElement {
 
                 header {
                     padding: 1rem;
+                    border-bottom: 1px solid #ccc;
                 }
 
                 ::slotted(h1) {
                     font-size: 1.25rem;
-                    margin-bottom: 0;
+                    margin: 0;
                 }
 
                 #actions {
@@ -75,8 +81,8 @@ class Modal extends HTMLElement {
                     <slot></slot>
                 </section>
                 <section id="actions">
-                    <button>Cancel</button>
-                    <button>Ok</button>
+                    <button id="cancelButton">Cancel</button>
+                    <button id="confirmButton">Ok</button>
                 </section>
             </div>
         `;
@@ -84,6 +90,14 @@ class Modal extends HTMLElement {
         slots[1].addEventListener('slotchange', event => {
             console.dir(slots[1].assignedNodes())
         });
+
+        const backDrop = this.shadowRoot.querySelector('#backdrop');
+        const cancelButton = this.shadowRoot.querySelector('#cancelButton');
+        const confirmButton = this.shadowRoot.querySelector('#confirmButton');
+
+        backDrop.addEventListener('click', this._cancel.bind(this));
+        cancelButton.addEventListener('click', this._cancel.bind(this));
+        confirmButton.addEventListener('click', this._confirm.bind(this));
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -107,6 +121,25 @@ class Modal extends HTMLElement {
     open() {
         this.setAttribute('opened', '');
         this.isOpen = true;
+    }
+
+    _cancel(event) {
+        this.hide();
+        const cancelEvent = new Event('cancel', { bubbles: true, composed: true });
+        event.target.dispatchEvent(cancelEvent);
+    }
+
+    _confirm() {
+        this.hide();
+        const confirmEvent = new Event('confirm', { bubbles: true, composed: true });
+        this.dispatchEvent(confirmEvent);
+    }
+
+    hide() {
+        if (this.hasAttribute('opened')) {
+            this.removeAttribute('opened');
+            this.isOpen = false;
+        }
     }
 }
 
